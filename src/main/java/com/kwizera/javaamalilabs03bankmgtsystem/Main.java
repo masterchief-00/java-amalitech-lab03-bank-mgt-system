@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Main extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) throws IOException { // starting javaFX with the first page of the application
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/kwizera/javaamalilabs03bankmgtsystem/views/create_account_page.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setScene(scene);

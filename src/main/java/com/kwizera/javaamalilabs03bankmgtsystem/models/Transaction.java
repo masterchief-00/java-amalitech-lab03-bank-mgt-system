@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+// a simple transaction history node, with a prev and next pointer
 public class Transaction {
     String type;
     double amount;
@@ -19,6 +20,7 @@ public class Transaction {
         this.prev = prev;
     }
 
+    // overrides the built in toString method to customize a transaction to a human friendly format
     @Override
     public String toString() {
         DecimalFormat formatter = new DecimalFormat("#,###.00");

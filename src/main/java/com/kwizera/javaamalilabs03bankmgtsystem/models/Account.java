@@ -14,7 +14,6 @@ public abstract class Account implements BankServices {
     private Transaction head = null;
     private Transaction tail = null;
 
-
     Account(String accountHolder, String accountNumber, Double balance, String accountType) {
         this.accountNumber = accountNumber;
         this.accountHolder = accountHolder;
@@ -24,11 +23,13 @@ public abstract class Account implements BankServices {
 
     public abstract boolean withdraw(double amount);
 
+    // basic logic for a deposit operation
     public void deposit(double amount) {
         balance += amount;
         recordTransaction("deposit", amount);
     }
 
+    // lists all transaction history
     public ArrayList<String> printHistory() {
         Transaction current = head;
         ArrayList<String> history = new ArrayList<>();
@@ -41,6 +42,7 @@ public abstract class Account implements BankServices {
         return history;
     }
 
+    // overloaded to list transaction history respective to specified N of entries
     public ArrayList<String> printHistory(int N) {
         Transaction current = tail;
         ArrayList<String> history = new ArrayList<>();
@@ -55,6 +57,7 @@ public abstract class Account implements BankServices {
         return history;
     }
 
+    // appends a new transaction record to a doubly linked list
     public void recordTransaction(String type, double amount) {
         LocalDateTime timestamp = LocalDateTime.now();
         Transaction newTransaction = new Transaction(type, amount, timestamp, null, null);

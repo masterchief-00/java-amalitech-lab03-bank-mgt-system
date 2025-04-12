@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Utils {
+
+    // a utility method to generate account IDs
     public String generateAccountNumber(String accType) {
         String prefix = switch (accType) {
             case "Savings account" -> "SVG";
@@ -22,6 +24,7 @@ public class Utils {
         return "ACC-" + prefix + "-" + randomNum;
     }
 
+    // a utility method to switch between pages
     public void switchScene(String fxmlFile, Button sourceButton, String title) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
@@ -31,6 +34,7 @@ public class Utils {
         stage.show();
     }
 
+    // a utility to render error messages
     public void displayError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -39,6 +43,7 @@ public class Utils {
         alert.showAndWait();
     }
 
+    // utility method to render confirmation messages
     public void displayConfirmation(String message) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Completed");

@@ -19,7 +19,6 @@ public class WithdrawController {
     DecimalFormat formatter = new DecimalFormat("#,###.00");
     Account bankAccount = SessionManager.getAccount();
 
-
     @FXML
     private Label currentBalLabel, maturityLabel, label1, errorLabel;
 
@@ -39,6 +38,7 @@ public class WithdrawController {
         errorLabel.setVisible(false);
         amountInput.setStyle("");
 
+        // input validation
         if (amountText.isEmpty()) {
             errorLabel.setText("Invalid number for amount");
             errorLabel.setVisible(true);
@@ -62,8 +62,9 @@ public class WithdrawController {
             isValid = false;
         }
 
+        // if input is valid
         if (isValid) {
-
+            // returns true when withdraw operation is successful and vice versa
             if (bankAccount.withdraw(amount)) {
                 String formattedBalance = formatter.format(bankAccount.getBalance());
 
@@ -71,8 +72,10 @@ public class WithdrawController {
                 utils.displayConfirmation("Amount withdrawn!");
                 currentBalLabel.setText("Updated balance: RWF " + formattedBalance);
             } else {
+                // display a general error message about the failed withdraw operation
                 utils.displayError("Withdraw failed, the amount specified can not be withdrawn!");
 
+                // customizing errors respective of the logged in account type and cause of the denied withdraw
                 if (bankAccount instanceof SavingsAccount) {
                     errorLabel.setText("The specified amount would set the balance below minimum allowed balanced");
                     amountInput.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
@@ -91,26 +94,30 @@ public class WithdrawController {
                     }
                     amountInput.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
                     errorLabel.setVisible(true);
-
                 }
             }
-
         }
         return;
     }
 
     @FXML
     private void onCancelClicked() throws IOException {
+        // on cancel, navigate back to main menu page
         utils.switchScene("/com/kwizera/javaamalilabs03bankmgtsystem/views/main_menu_page.fxml", cancelBtn, "Main menu");
     }
 
     @FXML
     private void initialize() {
+        // formatter to help in formatting numbers to human friendly formats
         String formattedBalance = formatter.format(bankAccount.getBalance());
+
         if (bankAccount == null) {
+            // handle session initialization failure
             utils.displayError("Account details could not be loaded, try again later");
             return;
         } else {
+
+            // load account details accordingly to account instance type
             switch (bankAccount) {
                 case CurrentAccount currentAccount -> {
                     String overdraftFormatted = formatter.format(currentAccount.getOverdraftLimit());

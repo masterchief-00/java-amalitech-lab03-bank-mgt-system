@@ -53,19 +53,9 @@ public class CreateAccountController {
         boolean isValid = true;
 
         // reset validation errors
-        errorLabel.setText("");
-        errorLabel.setVisible(false);
+        resetValidationErrors();
 
-        errorAccTypeLabel.setText("");
-        errorAccTypeLabel.setVisible(false);
-
-        errorAccHolderLabel.setText("");
-        errorAccHolderLabel.setVisible(false);
-
-        errorBalLabel.setText("");
-        errorBalLabel.setVisible(false);
-
-
+        // input validation
         if (invalidNames(names)) {
             errorAccHolderLabel.setText("Invalid names");
             errorAccHolderLabel.setVisible(true);
@@ -115,11 +105,10 @@ public class CreateAccountController {
             long MATURITY_OFFSET_MONTHS = 6;
             double INTEREST_RATE = 8.5;
 
+            // create account account instance according to account type selected
             switch (accType) {
-                case "Current account" ->
-                        bankAccount = new CurrentAccount(names, accId, initBalance, OVERDRAFT_LIMIT);
-                case "Savings account" ->
-                        bankAccount = new SavingsAccount(names, accId, initBalance, MINIMUM_BALANCE);
+                case "Current account" -> bankAccount = new CurrentAccount(names, accId, initBalance, OVERDRAFT_LIMIT);
+                case "Savings account" -> bankAccount = new SavingsAccount(names, accId, initBalance, MINIMUM_BALANCE);
                 case "Fixed deposit account" -> {
                     LocalDateTime maturityDate = LocalDateTime.now().plusMonths(MATURITY_OFFSET_MONTHS);
                     bankAccount = new FixedDepositAccount(names, accId, initBalance, maturityDate, INTEREST_RATE);
@@ -131,6 +120,7 @@ public class CreateAccountController {
                 }
             }
 
+            // adding the created account instance to the session
             SessionManager.setAccount(bankAccount);
             utils.displayConfirmation("Account created successfully!");
 
@@ -160,6 +150,7 @@ public class CreateAccountController {
         accountTypeInput.getItems().addAll("Current account", "Savings account", "Fixed deposit account");
         accountTypeInput.setValue("None");
 
+        // generate account ID according to type selected
         accountTypeInput.setOnAction(event -> {
             String selectedType = accountTypeInput.getValue();
             if (selectedType != null) {
@@ -170,8 +161,27 @@ public class CreateAccountController {
         });
     }
 
+    // validating account holder names
     private boolean invalidNames(String names) {
         return (!names.matches("[A-Za-z ]*") || names.length() < 2);
+    }
+
+    private void resetValidationErrors() {
+        accountHolderNamesInput.setStyle("");
+        accountBalanceInput.setStyle("");
+        accountTypeInput.setStyle("");
+
+        errorLabel.setText("");
+        errorLabel.setVisible(false);
+
+        errorAccTypeLabel.setText("");
+        errorAccTypeLabel.setVisible(false);
+
+        errorAccHolderLabel.setText("");
+        errorAccHolderLabel.setVisible(false);
+
+        errorBalLabel.setText("");
+        errorBalLabel.setVisible(false);
     }
 
 }

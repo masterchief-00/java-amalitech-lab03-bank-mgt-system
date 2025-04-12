@@ -15,7 +15,10 @@ import java.util.ArrayList;
 
 public class HistoryController {
     Utils utils = new Utils();
+
+    // formatter to help in formatting numbers to human friendly formats
     DecimalFormat formatter = new DecimalFormat("#,###.00");
+
     Account bankAccount = SessionManager.getAccount();
 
     @FXML
@@ -36,6 +39,7 @@ public class HistoryController {
         ArrayList<String> history = new ArrayList<>();
         boolean isValid = true;
 
+        // input validation
         if (entriesToFetchText.isEmpty()) {
             entriesInput.setText("0");
             isValid = false;
@@ -57,7 +61,9 @@ public class HistoryController {
             isValid = false;
         }
 
-        if (!isValid) {
+        if (!isValid) { // if input is valid
+
+            // in case the user doesn't specify N entries to retrieve, retrieve all
             selectedEntriesLabel.setText("No entries specified, displaying all transactions");
             history = bankAccount.printHistory();
 
@@ -69,7 +75,7 @@ public class HistoryController {
                 transactionList.getItems().add("No entries found for this account");
             }
         } else {
-
+            // in case the user specifies, retrieve the last N entries
             history = bankAccount.printHistory(entriesToFetch);
 
             transactionList.getItems().clear();
@@ -85,12 +91,14 @@ public class HistoryController {
 
     @FXML
     private void onCancelClicked() throws IOException {
+        // on cancel, navigate back to main menu page
         utils.switchScene("/com/kwizera/javaamalilabs03bankmgtsystem/views/main_menu_page.fxml", exitBtn,"Main menu");
     }
 
     @FXML
     public void initialize() {
         if (bankAccount == null) {
+            // handle failed session initialization
             utils.displayError("Account details could not be loaded, try again later");
             return;
         }

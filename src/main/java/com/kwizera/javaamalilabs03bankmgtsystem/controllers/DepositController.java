@@ -32,6 +32,7 @@ public class DepositController {
         String amountText = amountInput.getText();
         boolean isValid = true;
 
+        // input validation
         if (amountText.isEmpty()) {
             errorLabel.setText("Invalid number for amount");
             errorLabel.setVisible(true);
@@ -55,7 +56,8 @@ public class DepositController {
             isValid = false;
         }
 
-        if (isValid) {
+
+        if (isValid) { // if input is valid, deposit amount
             if (bankAccount instanceof FixedDepositAccount) {
                 if (((FixedDepositAccount) bankAccount).isMature()) {
                     bankAccount.deposit(amount);
@@ -64,10 +66,11 @@ public class DepositController {
                     utils.displayConfirmation("Amount deposited!");
                     currentBalLabel.setText("Updated balance: RWF " + formattedBalance);
                 } else {
+                    // block deposits on fixed deposit account yet to reach maturity date
                     utils.displayError("Deposit and withdraw operations are paused for this account until its maturity date.");
                     return;
                 }
-            } else {
+            } else { // allow deposits for other accounts types
                 bankAccount.deposit(amount);
 
                 String formattedBalance = formatter.format(bankAccount.getBalance());
@@ -81,6 +84,7 @@ public class DepositController {
 
     @FXML
     private void onCancelClicked() throws IOException {
+        // on cancel, navigate back to main menu
         utils.switchScene("/com/kwizera/javaamalilabs03bankmgtsystem/views/main_menu_page.fxml", cancelBtn, "Main menu");
     }
 
@@ -88,12 +92,15 @@ public class DepositController {
     private void initialize() {
         String formattedBalance = formatter.format(bankAccount.getBalance());
         if (bankAccount == null) {
+            // handle failed session initialization
             utils.displayError("Account details could not be loaded, try again later");
             return;
         } else {
             currentBalLabel.setText("Current balance: RWF " + formattedBalance);
 
             if (bankAccount instanceof FixedDepositAccount) {
+
+                // block deposit attempts on fixed deposit accounts yet to reach maturity dates
                 if (!((FixedDepositAccount) bankAccount).isMature()) {
                     confirmBtn.setDisable(true);
                     amountInput.setDisable(true);
